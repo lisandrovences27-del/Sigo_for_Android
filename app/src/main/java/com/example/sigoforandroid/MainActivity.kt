@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SigoForAndroidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Chipu pelon",
+                        name = "Presetenemen feria para pagarle a Fernanda",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
