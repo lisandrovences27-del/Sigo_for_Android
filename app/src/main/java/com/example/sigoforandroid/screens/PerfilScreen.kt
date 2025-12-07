@@ -804,16 +804,15 @@ fun EmergencyContactForm(
 fun BottomMenuProfile(
     onHome: () -> Unit,
     onLogout: () -> Unit,
-    modifier: Modifier = Modifier // CRUCIAL: Acepta el modificador de posición
+    modifier: Modifier = Modifier
 ) {
     Row(
-        // APLICA el modificador (que contendrá el .align(Alignment.BottomCenter))
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
             .background(Color.White.copy(alpha = 0.9f)),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         // Botón Inicio
         IconButton(
