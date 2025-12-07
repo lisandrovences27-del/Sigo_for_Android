@@ -1,4 +1,4 @@
-package com.example.sigoforandroid
+package com.example.sigoforandroid.screens
 
 import android.content.Context
 import android.widget.Toast
@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sigoforandroid.R
 import com.example.sigoforandroid.data.repository.UserRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -167,8 +168,12 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             val user = UserRepository.authenticate(matricula, password)
+                            // En LoginScreen.kt, dentro del onClick del botón
                             if (user != null) {
-                                navController.navigate("principal")
+                                // Login exitoso - navegar a pantalla principal con userId
+                                navController.navigate("main/${user.id}") {
+                                    popUpTo("login") { inclusive = true }
+                                }
                             } else {
                                 showToast(context, "Matrícula o contraseña incorrecta")
                             }
