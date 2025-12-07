@@ -6,5 +6,7 @@ data class EmergencyContact(
     val nombreCompleto: String,
     val parentesco: String,
     val telefonoCelular: String,
-    val telefonoCasa: String
+    val telefonoCasa: String,
+    val telefonoTrabajo: String = "", // Nuevo campo
+    val extension: String = "" // Nuevo campo
 )

@@ -66,7 +66,9 @@ object UserRepository {
             nombreCompleto = "María García López",
             parentesco = "Madre",
             telefonoCelular = "5511223344",
-            telefonoCasa = "5555667788"
+            telefonoCasa = "5555667788",
+            telefonoTrabajo = "5555778899", // Nuevo
+            extension = "123" // Nuevo
         ),
         EmergencyContact(
             id = 2,
@@ -74,7 +76,9 @@ object UserRepository {
             nombreCompleto = "José López Ramírez",
             parentesco = "Padre",
             telefonoCelular = "5522334455",
-            telefonoCasa = "5566778899"
+            telefonoCasa = "5566778899",
+            telefonoTrabajo = "", // Vacío
+            extension = "" // Vacío
         ),
         EmergencyContact(
             id = 3,
@@ -82,7 +86,9 @@ object UserRepository {
             nombreCompleto = "Ana Sánchez Fernández",
             parentesco = "Madre",
             telefonoCelular = "5533445566",
-            telefonoCasa = "5577889900"
+            telefonoCasa = "5577889900",
+            telefonoTrabajo = "5577990011",
+            extension = "456"
         )
     )
 
@@ -484,4 +490,8 @@ object UserRepository {
             0
         }
     }
+    // En UserRepository agregarías métodos update
+    fun updateUser(updatedUser: User) { /* actualizar en lista */ }
+    fun updateInstitutionalInfo(updatedInfo: InstitutionalInfo) { /* actualizar */ }
+    fun updateEmergencyContact(updatedContact: EmergencyContact) { /* actualizar */ }
 }
