@@ -78,7 +78,7 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(cardCornerRadius))
-                    .background(Color.Gray)
+                    .background(Color.White.copy(alpha = 0.9f))
 
                     .padding(16.dp), // Añadimos padding para que no se pegue a los bordes
                 horizontalArrangement = Arrangement.SpaceBetween // CRUCIAL: Separa los elementos al máximo
@@ -89,22 +89,30 @@ fun MainScreen(
                     // y usamos Modifier.weight(1f) para que tome el espacio disponible,
                     // sin empujar el ícono hacia afuera.
                     modifier = Modifier.weight(1f, fill = false),
+
                     horizontalAlignment = Alignment.Start // Alineamos los textos a la izquierda
                 ) {
                     Text(
                         text = "Bienvenido de nuevo",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = Color.Blue,
+                        modifier = Modifier.clip(RoundedCornerShape(cardCornerRadius))
+                            .background(Color.LightGray.copy(alpha = 0.5f))
+                            .padding(15.dp),
                         // Quitamos textAlign = TextAlign.Center para que se alinee a la izquierda (Start)
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = userFullName,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White,
+                        color = Color.Blue,
                         // Quitamos textAlign = TextAlign.Center
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(cardCornerRadius))
+                            .background(Color.LightGray.copy(alpha = 0.5f))
+                            .padding(15.dp)
                     )
                 }
 

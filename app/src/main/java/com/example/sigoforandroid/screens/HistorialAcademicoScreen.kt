@@ -2,6 +2,7 @@ package com.example.sigoforandroid.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,108 +52,118 @@ fun HistorialAcademicoScreen(
     val cardPadding = 16.dp
     val sectionSpacing = 12.dp
 
-    Box(
+    // ESTRUCTURA PRINCIPAL CORREGIDA
+    Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Fondo con imagen
-        Image(
-            painter = painterResource(id = R.drawable.fondooo),
-            contentDescription = "Fondo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        // Contenido principal con scroll
-        Column(
+        // CONTENIDO PRINCIPAL (con scroll)
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 80.dp), // Espacio para el menú inferior
-            horizontalAlignment = Alignment.CenterHorizontally
+                .weight(1f) // Esto hace que ocupe todo el espacio disponible
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            // Fondo con imagen
+            Image(
+                painter = painterResource(id = R.drawable.fondooo),
+                contentDescription = "Fondo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
 
-            // Header de la pantalla
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            ) {
-                Text(
-                    text = "HISTORIAL ACADÉMICO",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-
-                Text(
-                    text = "Promedio General: ${String.format("%.1f", averageGrade)}",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-
-                Text(
-                    text = "Cuatrimestres: ${finishedQuarters.size} finalizados",
-                    fontSize = 14.sp,
-                    color = Color.White,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Lista de cuatrimestres
+            // Contenido con scroll
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(sectionSpacing)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (quarters.isEmpty()) {
-                    // Mensaje si no hay cuatrimestres
-                    Card(
+                Spacer(modifier = Modifier.height(40.dp))
+
+                // Header de la pantalla
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text(
+                        text = "HISTORIAL ACADÉMICO",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(cardCornerRadius)),
-                        colors = CardDefaults.cardColors(containerColor = finishedCardColor)
-                    ) {
-                        Text(
-                            text = "No hay cuatrimestres registrados",
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color.Gray.copy(alpha = 0.9f)).padding(30.dp, 10.dp, 30.dp, 10.dp)
+                    )
+
+                    Text(
+                        text = "Promedio General: ${String.format("%.1f", averageGrade)}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+
+                    Text(
+                        text = "Cuatrimestres: ${finishedQuarters.size} finalizados",
+                        fontSize = 14.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Lista de cuatrimestres
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(sectionSpacing)
+                ) {
+                    if (quarters.isEmpty()) {
+                        // Mensaje si no hay cuatrimestres
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(cardPadding),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                    }
-                } else {
-                    quarters.forEach { quarter ->
-                        QuarterCard(
-                            quarter = quarter,
-                            isExpanded = expandedQuarters.contains(quarter.id),
-                            onExpandToggle = {
-                                if (expandedQuarters.contains(quarter.id)) {
-                                    expandedQuarters.remove(quarter.id)
-                                } else {
-                                    expandedQuarters.add(quarter.id)
-                                }
-                            },
-                            cardColor = if (quarter.estado == "activo") activeCardColor else finishedCardColor,
-                            statusColor = if (quarter.estado == "activo") activeStatusColor else finishedStatusColor,
-                            cardCornerRadius = cardCornerRadius,
-                            cardPadding = cardPadding
-                        )
+                                .clip(RoundedCornerShape(cardCornerRadius)),
+                            colors = CardDefaults.cardColors(containerColor = finishedCardColor)
+                        ) {
+                            Text(
+                                text = "No hay cuatrimestres registrados",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(cardPadding),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
+                    } else {
+                        quarters.forEach { quarter ->
+                            QuarterCard(
+                                quarter = quarter,
+                                isExpanded = expandedQuarters.contains(quarter.id),
+                                onExpandToggle = {
+                                    if (expandedQuarters.contains(quarter.id)) {
+                                        expandedQuarters.remove(quarter.id)
+                                    } else {
+                                        expandedQuarters.add(quarter.id)
+                                    }
+                                },
+                                cardColor = if (quarter.estado == "activo") activeCardColor else finishedCardColor,
+                                statusColor = if (quarter.estado == "activo") activeStatusColor else finishedStatusColor,
+                                cardCornerRadius = cardCornerRadius,
+                                cardPadding = cardPadding
+                            )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(80.dp)) // Espacio al final
+            }
         }
 
-        // Menú inferior para Historial Académico
+        // MENÚ INFERIOR (SIEMPRE ABAJO)
         BottomMenuHistorial(
             onHome = {
                 navController.navigate("main/$userId") {
@@ -171,6 +182,8 @@ fun HistorialAcademicoScreen(
         )
     }
 }
+
+// ================= COMPONENTES =================
 
 // Componente: Tarjeta de cuatrimestre
 @Composable
@@ -484,28 +497,32 @@ fun InfoChip(
     }
 }
 
-// Componente: Menú inferior para Historial Académico
+// MENÚ INFERIOR CORREGIDO
 @Composable
 fun BottomMenuHistorial(
     onHome: () -> Unit,
     onBack: () -> Unit,
-    onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    onLogout: () -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .background(Color.White.copy(alpha = 0.9f)),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        tonalElevation = 8.dp,
+        shadowElevation = 8.dp
     ) {
-        // Botón Inicio
-        IconButton(
-            onClick = onHome,
-            modifier = Modifier.size(56.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .background(Color.White),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Botón Inicio
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable(onClick = onHome)
+                    .padding(8.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.home),
                     contentDescription = "Inicio",
@@ -517,14 +534,14 @@ fun BottomMenuHistorial(
                     color = Color.Black
                 )
             }
-        }
 
-        // Botón Regresar
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier.size(56.dp)
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Botón Regresar
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable(onClick = onBack)
+                    .padding(8.dp)
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.volver),
                     contentDescription = "Regresar",
@@ -537,14 +554,14 @@ fun BottomMenuHistorial(
                     color = Color.Black
                 )
             }
-        }
 
-        // Botón Cerrar Sesión
-        IconButton(
-            onClick = onLogout,
-            modifier = Modifier.size(56.dp)
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Botón Cerrar Sesión
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable(onClick = onLogout)
+                    .padding(8.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.salida),
                     contentDescription = "Cerrar sesión",
@@ -559,6 +576,7 @@ fun BottomMenuHistorial(
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewHistorialAcademicoScreen() {

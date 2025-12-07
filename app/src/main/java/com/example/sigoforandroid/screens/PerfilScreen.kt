@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +31,6 @@ import com.example.sigoforandroid.data.model.EmergencyContact
 import com.example.sigoforandroid.data.model.InstitutionalInfo
 import com.example.sigoforandroid.data.model.User
 import com.example.sigoforandroid.data.repository.UserRepository
-
 @Composable
 fun PerfilScreen(
     navController: NavController,
@@ -52,7 +52,7 @@ fun PerfilScreen(
     var editContact by remember { mutableStateOf(false) }
     var editEmergency by remember { mutableStateOf(false) }
 
-    // Estados para datos editados (copias de los datos originales)
+    // Estados para datos editados
     var editedUser by remember { mutableStateOf(user?.copy() ?: User(
         id = 0, matricula = "", username = "", password = "", nombres = "",
         primerApellido = "", segundoApellido = "", fechaNacimiento = "",
@@ -78,200 +78,194 @@ fun PerfilScreen(
     val editedFieldBorderColor = Color.Green
     val normalFieldBorderColor = Color.Gray
 
-    Box(
+    // ESTRUCTURA PRINCIPAL CORREGIDA
+    Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Fondo con imagen
-        Image(
-            painter = painterResource(id = R.drawable.fondooo),
-            contentDescription = "Fondo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        // Contenido principal con scroll
-        Column(
+        // CONTENIDO PRINCIPAL (con scroll)
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 80.dp), // Espacio para el menú inferior
-            horizontalAlignment = Alignment.CenterHorizontally
+                .weight(1f) // Esto hace que ocupe todo el espacio disponible
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Título de la pantalla
-            Text(
-                text = "MI PERFIL",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.White,
-                modifier = Modifier.padding(bottom = 24.dp)
+            // Fondo con imagen
+            Image(
+                painter = painterResource(id = R.drawable.fondooo),
+                contentDescription = "Fondo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
 
-            // Sección 1: INFORMACIÓN PERSONAL
-            ExpandableSection(
-                title = "INFORMACIÓN PERSONAL",
-                isExpanded = expandedSection == 1,
-                onExpandToggle = {
-                    expandedSection = if (expandedSection == 1) 0 else 1
-                    editPersonal = false
-                },
-                cardColor = cardColor,
-                cardCornerRadius = cardCornerRadius,
-                cardPadding = cardPadding
+            // Contenido con scroll
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PersonalInfoForm(
-                    user = editedUser,
-                    onUserChange = { editedUser = it },
-                    isEditing = editPersonal,
-                    borderColor = if (editPersonal) editedFieldBorderColor else normalFieldBorderColor,
-                    onSave = {
-                        // Validar campos obligatorios
-                        if (editedUser.nombres.isBlank() || editedUser.primerApellido.isBlank() ||
-                            editedUser.fechaNacimiento.isBlank() || editedUser.sexo.isBlank() ||
-                            editedUser.curp.isBlank() || editedUser.numeroSeguridadSocial.isBlank()) {
-                            showToast(context, "Todos los campos son obligatorios")
-                            return@PersonalInfoForm
-                        }
+                Spacer(modifier = Modifier.height(40.dp))
 
-                        // Aquí actualizaríamos el repositorio en una app real
-                        // Por ahora, sólo mostramos mensaje
+                // Título de la pantalla
+                Text(
+                    text = "MI PERFIL",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White,
+                    modifier = Modifier.clip(RoundedCornerShape(cardCornerRadius))
+                    .background(Color.Gray.copy(alpha = 0.8f))
+
+                        .padding(bottom = 10.dp, start = 24.dp, end = 24.dp, top = 10.dp)
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+                // Sección 1: INFORMACIÓN PERSONAL
+                ExpandableSection(
+                    title = "INFORMACIÓN PERSONAL",
+                    isExpanded = expandedSection == 1,
+                    onExpandToggle = {
+                        expandedSection = if (expandedSection == 1) 0 else 1
                         editPersonal = false
-                        showToast(context, "Información personal actualizada correctamente")
                     },
-                    onEditToggle = { editPersonal = !editPersonal }
-                )
-            }
+                    cardColor = cardColor,
+                    cardCornerRadius = cardCornerRadius,
+                    cardPadding = cardPadding
+                ) {
+                    PersonalInfoForm(
+                        user = editedUser,
+                        onUserChange = { editedUser = it },
+                        isEditing = editPersonal,
+                        borderColor = if (editPersonal) editedFieldBorderColor else normalFieldBorderColor,
+                        onSave = {
+                            if (editedUser.nombres.isBlank() || editedUser.primerApellido.isBlank() ||
+                                editedUser.fechaNacimiento.isBlank() || editedUser.sexo.isBlank() ||
+                                editedUser.curp.isBlank() || editedUser.numeroSeguridadSocial.isBlank()) {
+                                showToast(context, "Todos los campos son obligatorios")
+                                return@PersonalInfoForm
+                            }
+                            editPersonal = false
+                            showToast(context, "Información personal actualizada correctamente")
+                        },
+                        onEditToggle = { editPersonal = !editPersonal }
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(sectionSpacing))
+                Spacer(modifier = Modifier.height(sectionSpacing))
 
-            // Sección 2: INFORMACIÓN INSTITUCIONAL
-            ExpandableSection(
-                title = "INFORMACIÓN INSTITUCIONAL",
-                isExpanded = expandedSection == 2,
-                onExpandToggle = {
-                    expandedSection = if (expandedSection == 2) 0 else 2
-                    editInstitutional = false
-                },
-                cardColor = cardColor,
-                cardCornerRadius = cardCornerRadius,
-                cardPadding = cardPadding
-            ) {
-                InstitutionalInfoForm(
-                    institutionalInfo = editedInstitutionalInfo,
-                    onInstitutionalInfoChange = { editedInstitutionalInfo = it },
-                    isEditing = editInstitutional,
-                    borderColor = if (editInstitutional) editedFieldBorderColor else normalFieldBorderColor,
-                    onSave = {
-                        // Validar campos obligatorios
-                        if (editedInstitutionalInfo.passwordEmail.isBlank() ||
-                            editedInstitutionalInfo.passwordELibro.isBlank()) {
-                            showToast(context, "Las contraseñas son obligatorias")
-                            return@InstitutionalInfoForm
-                        }
-
+                // Sección 2: INFORMACIÓN INSTITUCIONAL
+                ExpandableSection(
+                    title = "INFORMACIÓN INSTITUCIONAL",
+                    isExpanded = expandedSection == 2,
+                    onExpandToggle = {
+                        expandedSection = if (expandedSection == 2) 0 else 2
                         editInstitutional = false
-                        showToast(context, "Información institucional actualizada correctamente")
                     },
-                    onEditToggle = { editInstitutional = !editInstitutional }
-                )
-            }
+                    cardColor = cardColor,
+                    cardCornerRadius = cardCornerRadius,
+                    cardPadding = cardPadding
+                ) {
+                    InstitutionalInfoForm(
+                        institutionalInfo = editedInstitutionalInfo,
+                        onInstitutionalInfoChange = { editedInstitutionalInfo = it },
+                        isEditing = editInstitutional,
+                        borderColor = if (editInstitutional) editedFieldBorderColor else normalFieldBorderColor,
+                        onSave = {
+                            if (editedInstitutionalInfo.passwordEmail.isBlank() ||
+                                editedInstitutionalInfo.passwordELibro.isBlank()) {
+                                showToast(context, "Las contraseñas son obligatorias")
+                                return@InstitutionalInfoForm
+                            }
+                            editInstitutional = false
+                            showToast(context, "Información institucional actualizada correctamente")
+                        },
+                        onEditToggle = { editInstitutional = !editInstitutional }
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(sectionSpacing))
+                Spacer(modifier = Modifier.height(sectionSpacing))
 
-            // Sección 3: INFORMACIÓN DE CONTACTO
-            ExpandableSection(
-                title = "INFORMACIÓN DE CONTACTO",
-                isExpanded = expandedSection == 3,
-                onExpandToggle = {
-                    expandedSection = if (expandedSection == 3) 0 else 3
-                    editContact = false
-                },
-                cardColor = cardColor,
-                cardCornerRadius = cardCornerRadius,
-                cardPadding = cardPadding
-            ) {
-                ContactInfoForm(
-                    user = editedUser,
-                    onUserChange = { editedUser = it },
-                    isEditing = editContact,
-                    borderColor = if (editContact) editedFieldBorderColor else normalFieldBorderColor,
-                    onSave = {
-                        // Validar teléfono (10 dígitos)
-                        if (editedUser.telefonoPersonal.length != 10) {
-                            showToast(context, "El teléfono debe tener 10 dígitos")
-                            return@ContactInfoForm
-                        }
-
-                        // Validar email
-                        if (!editedUser.emailPersonal.contains("@")) {
-                            showToast(context, "Email inválido")
-                            return@ContactInfoForm
-                        }
-
+                // Sección 3: INFORMACIÓN DE CONTACTO
+                ExpandableSection(
+                    title = "INFORMACIÓN DE CONTACTO",
+                    isExpanded = expandedSection == 3,
+                    onExpandToggle = {
+                        expandedSection = if (expandedSection == 3) 0 else 3
                         editContact = false
-                        showToast(context, "Información de contacto actualizada correctamente")
                     },
-                    onEditToggle = { editContact = !editContact }
-                )
-            }
+                    cardColor = cardColor,
+                    cardCornerRadius = cardCornerRadius,
+                    cardPadding = cardPadding
+                ) {
+                    ContactInfoForm(
+                        user = editedUser,
+                        onUserChange = { editedUser = it },
+                        isEditing = editContact,
+                        borderColor = if (editContact) editedFieldBorderColor else normalFieldBorderColor,
+                        onSave = {
+                            if (editedUser.telefonoPersonal.length != 10) {
+                                showToast(context, "El teléfono debe tener 10 dígitos")
+                                return@ContactInfoForm
+                            }
+                            if (!editedUser.emailPersonal.contains("@")) {
+                                showToast(context, "Email inválido")
+                                return@ContactInfoForm
+                            }
+                            editContact = false
+                            showToast(context, "Información de contacto actualizada correctamente")
+                        },
+                        onEditToggle = { editContact = !editContact }
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(sectionSpacing))
+                Spacer(modifier = Modifier.height(sectionSpacing))
 
-            // Sección 4: CONTACTO DE EMERGENCIA
-            ExpandableSection(
-                title = "CONTACTO DE EMERGENCIA",
-                isExpanded = expandedSection == 4,
-                onExpandToggle = {
-                    expandedSection = if (expandedSection == 4) 0 else 4
-                    editEmergency = false
-                },
-                cardColor = cardColor,
-                cardCornerRadius = cardCornerRadius,
-                cardPadding = cardPadding
-            ) {
-                EmergencyContactForm(
-                    emergencyContact = editedEmergencyContact,
-                    onEmergencyContactChange = { editedEmergencyContact = it },
-                    isEditing = editEmergency,
-                    borderColor = if (editEmergency) editedFieldBorderColor else normalFieldBorderColor,
-                    onSave = {
-                        // Validar campos obligatorios
-                        if (editedEmergencyContact.nombreCompleto.isBlank() ||
-                            editedEmergencyContact.parentesco.isBlank() ||
-                            editedEmergencyContact.telefonoCelular.isBlank()) {
-                            showToast(context, "Nombre, parentesco y teléfono celular son obligatorios")
-                            return@EmergencyContactForm
-                        }
-
-                        // Validar teléfonos (si están presentes, deben ser 10 dígitos)
-                        if (editedEmergencyContact.telefonoCelular.length != 10) {
-                            showToast(context, "Teléfono celular debe tener 10 dígitos")
-                            return@EmergencyContactForm
-                        }
-
-                        if (editedEmergencyContact.telefonoCasa.isNotBlank() &&
-                            editedEmergencyContact.telefonoCasa.length != 10) {
-                            showToast(context, "Teléfono casa debe tener 10 dígitos")
-                            return@EmergencyContactForm
-                        }
-
-                        if (editedEmergencyContact.telefonoTrabajo.isNotBlank() &&
-                            editedEmergencyContact.telefonoTrabajo.length != 10) {
-                            showToast(context, "Teléfono trabajo debe tener 10 dígitos")
-                            return@EmergencyContactForm
-                        }
-
+                // Sección 4: CONTACTO DE EMERGENCIA
+                ExpandableSection(
+                    title = "CONTACTO DE EMERGENCIA",
+                    isExpanded = expandedSection == 4,
+                    onExpandToggle = {
+                        expandedSection = if (expandedSection == 4) 0 else 4
                         editEmergency = false
-                        showToast(context, "Contacto de emergencia actualizado correctamente")
                     },
-                    onEditToggle = { editEmergency = !editEmergency }
-                )
-            }
+                    cardColor = cardColor,
+                    cardCornerRadius = cardCornerRadius,
+                    cardPadding = cardPadding
+                ) {
+                    EmergencyContactForm(
+                        emergencyContact = editedEmergencyContact,
+                        onEmergencyContactChange = { editedEmergencyContact = it },
+                        isEditing = editEmergency,
+                        borderColor = if (editEmergency) editedFieldBorderColor else normalFieldBorderColor,
+                        onSave = {
+                            if (editedEmergencyContact.nombreCompleto.isBlank() ||
+                                editedEmergencyContact.parentesco.isBlank() ||
+                                editedEmergencyContact.telefonoCelular.isBlank()) {
+                                showToast(context, "Nombre, parentesco y teléfono celular son obligatorios")
+                                return@EmergencyContactForm
+                            }
+                            if (editedEmergencyContact.telefonoCelular.length != 10) {
+                                showToast(context, "Teléfono celular debe tener 10 dígitos")
+                                return@EmergencyContactForm
+                            }
+                            if (editedEmergencyContact.telefonoCasa.isNotBlank() &&
+                                editedEmergencyContact.telefonoCasa.length != 10) {
+                                showToast(context, "Teléfono casa debe tener 10 dígitos")
+                                return@EmergencyContactForm
+                            }
+                            if (editedEmergencyContact.telefonoTrabajo.isNotBlank() &&
+                                editedEmergencyContact.telefonoTrabajo.length != 10) {
+                                showToast(context, "Teléfono trabajo debe tener 10 dígitos")
+                                return@EmergencyContactForm
+                            }
+                            editEmergency = false
+                            showToast(context, "Contacto de emergencia actualizado correctamente")
+                        },
+                        onEditToggle = { editEmergency = !editEmergency }
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(80.dp)) // Espacio al final para que no tape el contenido
+            }
         }
 
-        // Menú inferior personalizado para PerfilScreen
+        // MENÚ INFERIOR (SIEMPRE ABAJO)
         BottomMenuProfile(
             onHome = {
                 navController.navigate("main/$userId") {
@@ -288,7 +282,8 @@ fun PerfilScreen(
     }
 }
 
-// Componente: Sección expandible
+// ================= COMPONENTES =================
+
 @Composable
 fun ExpandableSection(
     title: String,
@@ -307,7 +302,7 @@ fun ExpandableSection(
         colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Column {
-            // Header de la sección (siempre visible)
+            // Header de la sección
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -345,7 +340,6 @@ fun ExpandableSection(
     }
 }
 
-// Componente: Formulario de Información Personal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalInfoForm(
@@ -485,7 +479,6 @@ fun PersonalInfoForm(
     }
 }
 
-// Componente: Formulario de Información Institucional
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InstitutionalInfoForm(
@@ -519,7 +512,7 @@ fun InstitutionalInfoForm(
             onValueChange = { /* No editable */ },
             label = { Text("Correo") },
             modifier = Modifier.fillMaxWidth(),
-            readOnly = true, // Sólo lectura
+            readOnly = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.LightGray,
                 unfocusedBorderColor = Color.LightGray
@@ -566,7 +559,7 @@ fun InstitutionalInfoForm(
             onValueChange = { /* No editable */ },
             label = { Text("Usuario") },
             modifier = Modifier.fillMaxWidth(),
-            readOnly = true, // Sólo lectura
+            readOnly = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.LightGray,
                 unfocusedBorderColor = Color.LightGray
@@ -604,7 +597,6 @@ fun InstitutionalInfoForm(
     }
 }
 
-// Componente: Formulario de Información de Contacto
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactInfoForm(
@@ -672,7 +664,6 @@ fun ContactInfoForm(
     }
 }
 
-// Componente: Formulario de Contacto de Emergencia
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmergencyContactForm(
@@ -799,27 +790,31 @@ fun EmergencyContactForm(
     }
 }
 
-// Componente: Menú inferior para PerfilScreen
+// MENÚ INFERIOR CORREGIDO
 @Composable
 fun BottomMenuProfile(
     onHome: () -> Unit,
-    onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    onLogout: () -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .background(Color.White.copy(alpha = 0.9f)),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        tonalElevation = 8.dp,
+        shadowElevation = 8.dp
     ) {
-        // Botón Inicio
-        IconButton(
-            onClick = onHome,
-            modifier = Modifier.size(56.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .background(Color.White),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Botón Inicio
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable(onClick = onHome)
+                    .padding(8.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.home),
                     contentDescription = "Inicio",
@@ -831,14 +826,14 @@ fun BottomMenuProfile(
                     color = Color.Black
                 )
             }
-        }
 
-        // Botón Cerrar Sesión
-        IconButton(
-            onClick = onLogout,
-            modifier = Modifier.size(56.dp)
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Botón Cerrar Sesión
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clickable(onClick = onLogout)
+                    .padding(8.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.salida),
                     contentDescription = "Cerrar sesión",
