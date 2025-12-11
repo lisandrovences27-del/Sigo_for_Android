@@ -49,9 +49,10 @@ fun LoginScreen(viewModel: LoginViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.verticalGradient(
+                brush =  Brush.horizontalGradient(
                     colors = listOf(UtmDarkBlue, UtmLightBlue)
                 )
+
             )
     ) {
         // --- SECCIÓN SUPERIOR (LOGOS) ---
@@ -63,12 +64,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 24.dp)
+                modifier = Modifier.padding(horizontal = 28.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.siigooo),
+                    painter = painterResource(id = R.drawable.sigoooi),
                     contentDescription = "Logo SIGO",
-                    modifier = Modifier.height(50.dp),
+                    modifier = Modifier.height(65.dp),
                     contentScale = ContentScale.Fit
                 )
 
@@ -81,9 +82,9 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.utmmmm),
+                    painter = painterResource(id = R.drawable.utmi),
                     contentDescription = "Logo UTM",
-                    modifier = Modifier.height(50.dp),
+                    modifier = Modifier.height(65.dp),
                     contentScale = ContentScale.Fit
                 )
             }

@@ -3,8 +3,8 @@ package com.example.sigoforandroid.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Colores aproximados basados en el diseño UTM/SIGO
-val UtmDarkBlue = Color(0xFF1B3B5A)
-val UtmLightBlue = Color(0xFF35688F)
+val UtmDarkBlue = Color(0xFF224245)
+val UtmLightBlue = Color(0xFF4b6a9b)
 val UtmGreen = Color(0xFF368F7B)
 val UtmTextGray = Color(0xFF555555)
 

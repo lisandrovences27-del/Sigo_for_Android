@@ -49,4 +49,10 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
+    fun logout() {
+        studentData = null
+        username = ""
+        password = ""
+        errorMessage = null
+    }
 }

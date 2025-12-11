@@ -1,24 +1,27 @@
 package com.example.sigoforandroid.data.model
-
 data class LoginResponse(
-    // Datos de la persona que se mostrarán en la pantalla principal:
-    val personFullName: String, // Nombre completo (ej: Angel Jair)
-    val profileName: String,    // Perfil/Carrera (ej: Alumno, Ingenieria...)
+    // Datos de la persona / Perfil (a mostrar en la UI)
+    val personFullName: String,
+    val profileName: String,
+    val email: String,
+    val username: String, // El usuario/matrícula
+    val personId: Int,    // ID de persona (entero)
 
-    // Datos de la sesión (importantes para navegación/peticiones futuras):
-    val bearer: String,         // El token de seguridad
-
-    // Otros datos de control que necesitas para el modelo:
+    // Datos internos de la sesión y registro (pueden ser útiles)
     val termsConditions: Boolean,
     val registerUser: String,
     val active: Boolean,
     val messageControl: String,
     val accessModule: String,
-    val personId: Int,
     val register: String,
-    val email: String,
     val id: Int,
-    val username: String,
-    val password: String,
-    val roles: List<String>
+
+    // Lista de roles (generalmente se usa para permisos)
+    val roles: List<String>,
+
+    // Token de seguridad (NO se muestra en la UI)
+    val bearer: String
+
+    // NOTA: Los campos 'controlNumber', 'curp', 'studentStatus' que usamos antes NO están
+    // en este JSON, por lo que serán omitidos o tendrás que pedirlos a otra API si son necesarios.
 )

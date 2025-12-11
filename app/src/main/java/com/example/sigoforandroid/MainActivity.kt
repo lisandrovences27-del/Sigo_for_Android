@@ -35,14 +35,10 @@ fun AppNavigation() {
     val studentData = loginViewModel.studentData
 
     if (studentData != null) {
-        // ✅ LOGIN EXITOSO: Navegar a Home
-        // Usamos los campos actualizados del LoginResponse
-        HomeScreen(
-            personFullName = studentData.personFullName, // Campo corregido
-            profileName = studentData.profileName         // Campo corregido
-        )
+            HomeScreen(studentData = studentData)    // Campo corregido
+
     } else {
-        // ❌ NO AUTENTICADO: Permanecer en Login
+
         LoginScreen(viewModel = loginViewModel)
     }
 }
