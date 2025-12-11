@@ -110,7 +110,8 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     value = viewModel.username,
                     onValueChange = { viewModel.username = it },
                     placeholder = "Usuario o Matrícula",
-                    icon = Icons.Default.Person
+                    icon = Icons.Default.Person,
+
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -196,20 +197,32 @@ fun CustomTextField(
 
         // Simulación de OutlinedTextField usando TextFieldDefaults.colors
         colors = TextFieldDefaults.colors(
-            // Fondo siempre blanco para simular la tarjeta
+            // --- Colores del Contenedor/Fondo ---
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             disabledContainerColor = Color.White,
 
-            // Indicadores (bordes) para simular el delineado
+            // --- Colores del Texto (LA CLAVE) ---
+            // Color del texto que el usuario escribe cuando el campo está enfocado (seleccionado)
+            focusedTextColor = Color.Black,
+            // Color del texto que el usuario escribe cuando el campo NO está enfocado
+            unfocusedTextColor = Color.Black,
+
+            // --- Colores de Bordes (Indicadores) y Elementos ---
             focusedIndicatorColor = UtmGreen,
             unfocusedIndicatorColor = Color.LightGray,
             disabledIndicatorColor = Color.LightGray,
 
-            // Colores del cursor e íconos
-            cursorColor = UtmGreen,
+            // Color del texto de ayuda ("Usuario o Matrícula")
+            focusedPlaceholderColor = Color.Gray,
+            unfocusedPlaceholderColor = Color.Gray,
+
+            // Color de los íconos (el candado y el usuario)
             focusedLeadingIconColor = UtmGreen,
-            unfocusedLeadingIconColor = Color.Black
+            unfocusedLeadingIconColor = Color.Black,
+
+            // Color del cursor
+            cursorColor = UtmGreen
         ),
 
         // Aplicamos la forma delineada
