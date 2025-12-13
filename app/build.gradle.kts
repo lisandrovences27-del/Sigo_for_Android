@@ -16,6 +16,21 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        packagingOptions {
+            resources {
+                // Archivos de Netty que causan conflicto
+                excludes += "/META-INF/io.netty.versions.properties"
+
+                // Archivos de conflicto anteriores
+                excludes += "/META-INF/{AL2.0,LGPL2.1}"
+                excludes += "/META-INF/INDEX.LIST"
+                excludes += "/META-INF/DEPENDENCIES"
+                excludes += "/META-INF/LICENSE"
+                excludes += "/META-INF/LICENSE.txt"
+                excludes += "/META-INF/NOTICE"
+                excludes += "/META-INF/NOTICE.txt"
+            }
+        }
     }
 
     buildTypes {
@@ -49,6 +64,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.firebase.appdistribution.gradle)
+    implementation(libs.androidx.tracing.perfetto.handshake)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +74,11 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Converter de Gson (para serializar/deserializar el JSON)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }

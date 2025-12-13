@@ -3,45 +3,42 @@ package com.example.sigoforandroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.sigoforandroid.ui.theme.SigoForAndroidTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sigoforandroid.ui.screens.HomeScreen
+import com.example.sigoforandroid.ui.screens.LoginScreen
+import com.example.sigoforandroid.ui.theme.SigoForAndroidTheme // Tu tema principal
+import com.example.sigoforandroid.ui.viewmodel.LoginViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            SigoForAndroidTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Chipu pelon",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            SigoForAndroidTheme { // Asegúrate de usar el nombre de tu tema
+                AppNavigation()
             }
         }
     }
 }
 
+/**
+ * Gestiona la navegación de la aplicación basándose en el estado de autenticación.
+ * * Si el studentData no es nulo (login exitoso), navega a HomeScreen,
+ * de lo contrario, permanece en LoginScreen.
+ */
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun AppNavigation() {
+    // Obtenemos una instancia del ViewModel
+    val loginViewModel: LoginViewModel = viewModel()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SigoForAndroidTheme {
-        Greeting("Android")
+    // Observamos el estado de los datos del estudiante
+    val studentData = loginViewModel.studentData
+
+    if (studentData != null) {
+            HomeScreen(studentData = studentData)    // Campo corregido
+
+    } else {
+
+        LoginScreen(viewModel = loginViewModel)
     }
 }
